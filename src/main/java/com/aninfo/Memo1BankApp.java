@@ -1,7 +1,9 @@
 package com.aninfo;
 
 import com.aninfo.model.Account;
+import com.aninfo.model.Transaction;
 import com.aninfo.service.AccountService;
+import com.aninfo.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,6 +28,8 @@ public class Memo1BankApp {
 
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private TransactionService transactionService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Memo1BankApp.class, args);
@@ -75,6 +79,32 @@ public class Memo1BankApp {
 		return accountService.deposit(cbu, sum);
 	}
 
+	@PostMapping("/transaction/deposit")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Transaction deposit(@RequestBody Transaction transaction) {
+		return transactionService.createDeposit(transaction);
+	}
+
+	@PostMapping("/transaction/withdrawal")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Transaction withdrawal(@RequestBody Transaction transaction) {
+		return transactionService.createWithdrawal(transaction);
+	}
+
+	@GetMapping("/transactions/{cbu}")
+	public Collection<Transaction> getTransactions(@PathVariable Long cbu) {
+		return transactionService.findTransactionsByCbu(cbu);
+	}
+	@GetMapping("/transaction/{id}")
+	public ResponseEntity<Transaction> getTransaction(@PathVariable Long id) {
+		Optional<Transaction> transactionsOptional = transactionService.findById(id);
+		return ResponseEntity.of(transactionsOptional);
+	}
+	@DeleteMapping("/transaction/{id}")
+	public void deleteTransaction(@PathVariable Long id) {
+
+		transactionService.deleteById(id);
+	}
 	@Bean
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.SWAGGER_2)
