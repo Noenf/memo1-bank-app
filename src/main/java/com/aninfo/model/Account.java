@@ -10,6 +10,8 @@ public class Account {
     private Long cbu;
 
     private Double balance;
+    private static final Double maxPromoDiscount = 500.00;
+    private static final Double minPromoAmount = 2000.00;
 
     public Account(){
     }
@@ -33,5 +35,10 @@ public class Account {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+    public Double getMaxPromoDiscount(){return maxPromoDiscount;}
+
+    public Double getMinPromoAmount(){return minPromoAmount;}
+
 
 }

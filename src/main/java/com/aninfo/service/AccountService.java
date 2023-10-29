@@ -51,6 +51,18 @@ public class AccountService {
         return account;
     }
 
+    public Double applyPromotions(Double sum, Account account){
+        if(sum >= account.getMinPromoAmount()){
+            Double amount = (sum * 0.10);
+            if(amount <= account.getMaxPromoDiscount()){
+                sum += amount;
+            }else {
+                sum += account.getMaxPromoDiscount();
+            }
+        }
+        return sum;
+    }
+
     @Transactional
     public Account deposit(Long cbu, Double sum) {
 
@@ -59,10 +71,12 @@ public class AccountService {
         }
 
         Account account = accountRepository.findAccountByCbu(cbu);
-        account.setBalance(account.getBalance() + sum);
+
+        account.setBalance(account.getBalance() + applyPromotions(sum,account));
         accountRepository.save(account);
 
         return account;
     }
+
 
 }
